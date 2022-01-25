@@ -254,14 +254,12 @@ static void _sort_node_record_table_ptr(void)
 			node_record_table_ptr[i]->index = i;
 	}
 
-#if _DEBUG
 	/* Log the results */
 	node_record_t *node_ptr;
 	for (int i = 0; (node_ptr = next_node(&i));) {
 		info("node_rank[%d:%d]: %s",
 		     node_ptr->index, node_ptr->node_rank, node_ptr->name);
 	}
-#endif
 }
 
 static void _add_nodes_with_feature(hostlist_t hl, char *feature)
