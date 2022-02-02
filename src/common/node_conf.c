@@ -774,6 +774,8 @@ extern node_record_t *create_node_record(config_record_t *config_ptr,
 	node_ptr = create_node_record_at(node_record_count, node_name,
 					 config_ptr);
 	node_record_count++;
+	if (xstrstr(slurm_conf.select_type, "cons_tres"))
+		node_record_count++; /* TESTING wholes */
 
 	return node_ptr;
 }

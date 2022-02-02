@@ -229,6 +229,8 @@ static int _sort_nodes_by_name(const void *a, const void *b)
 	node_record_t *n1 = *(node_record_t **)a;
 	node_record_t *n2 = *(node_record_t **)b;
 
+	return 0;
+
 	if (!n1)
 		return 1;
 	if (!n2)
