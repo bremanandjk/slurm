@@ -1428,7 +1428,7 @@ extern void server_thread_incr(void)
 static int _accounting_cluster_ready(void)
 {
 	int rc = SLURM_ERROR;
-	time_t event_time = time(NULL);
+	static time_t event_time = 0;
 	bitstr_t *total_node_bitmap = NULL;
 	char *cluster_nodes = NULL, *cluster_tres_str;
 	slurmctld_lock_t node_write_lock = {
@@ -1452,6 +1452,8 @@ static int _accounting_cluster_ready(void)
 
 	unlock_slurmctld(node_write_lock);
 
+	if (!event_time)
+		event_time = time(NULL);
 	rc = clusteracct_storage_g_cluster_tres(acct_db_conn,
 						cluster_nodes,
 						cluster_tres_str, event_time,
@@ -1476,6 +1478,15 @@ static int _accounting_cluster_ready(void)
 		send_all_to_accounting(event_time, rc);
 		rc = SLURM_SUCCESS;
 	}
+
+	/*
+	 * We don't know when TRES will change due to a dynamic node checkin or
+	 * bust buffer creation so we always send the last time so that so we
+	 * don't have more time than possible.
+	 *
+	 * TODO: create a last_tres_updated and only call this if it's changed.
+	 */
+	event_time = time(NULL)+1;
 
 	return rc;
 }
