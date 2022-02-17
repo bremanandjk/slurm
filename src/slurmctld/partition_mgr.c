@@ -204,6 +204,7 @@ extern int build_part_bitmap(part_record_t *part_ptr)
 	if (!xstrcmp(part_ptr->nodes, "ALL")) {
 		bit_nset(part_ptr->node_bitmap, 0, node_record_count - 1);
 		xfree(part_ptr->nodes);
+		/* How to display to the user that ALL is set? */
 		part_ptr->nodes = bitmap2node_name(part_ptr->node_bitmap);
 		bit_nclear(part_ptr->node_bitmap, 0, node_record_count - 1);
 	}
