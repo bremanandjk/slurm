@@ -484,6 +484,15 @@ extern int load_all_node_state ( bool state_only )
 
 		if (node_state & NODE_STATE_DYNAMIC_NORM) {
 			/* Create node record to restore node into. */
+			/*
+			 * One thing, when nodes are created with scontrol,
+			 * it creates one config_record_t for all the nodes, but
+			 * since we don't state save the config_record
+			 * config_record will be expanded into individual
+			 * config_records. I could change this so that when
+			 * nodes are created with scontrol the config_record is
+			 * 1:1 to the node.
+			 */
 			config_record_t *config_ptr;
 			config_ptr = create_config_record();
 			config_ptr->boards = boards;
