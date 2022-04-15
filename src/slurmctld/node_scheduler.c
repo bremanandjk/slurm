@@ -185,7 +185,7 @@ extern void allocate_nodes(job_record_t *job_ptr)
 	}
 
 	for (i = 0; (node_ptr = next_node(&i)); i++) {
-		if (!bit_test(job_ptr->node_bitmap, node_ptr->index))
+		if (!bit_test(job_ptr->node_bitmap, i))
 			continue;
 
 		if (IS_NODE_DYNAMIC_FUTURE(node_ptr))
@@ -251,7 +251,7 @@ extern void set_job_alias_list(job_record_t *job_ptr)
 		return;
 
 	for (i = 0; (node_ptr = next_node(&i)); i++) {
-		if (!bit_test(job_ptr->node_bitmap, node_ptr->index))
+		if (!bit_test(job_ptr->node_bitmap, i))
 			continue;
 
 		if (IS_NODE_DYNAMIC_FUTURE(node_ptr) ||
@@ -357,11 +357,9 @@ extern void deallocate_nodes(job_record_t *job_ptr, bool timeout,
 							    state_flags;
 			}
 			for (i = 0; (node_ptr = next_node(&i)); i++) {
-				if (!bit_test(job_ptr->node_bitmap,
-					      node_ptr->index))
+				if (!bit_test(job_ptr->node_bitmap, i))
 					continue;
-				node_ptr =
-					node_record_table_ptr[node_ptr->index];
+				node_ptr = node_record_table_ptr[i];
 				make_node_comp(node_ptr, job_ptr, suspended);
 				set_fe_comp = true;
 			}
@@ -881,7 +879,7 @@ extern void filter_by_node_owner(job_record_t *job_ptr,
 	for (i = 0; (node_ptr = next_node(&i)); i++) {
 		if ((node_ptr->owner != NO_VAL) &&
 		    (node_ptr->owner != job_ptr->user_id))
-			bit_clear(usable_node_mask, node_ptr->index);
+			bit_clear(usable_node_mask, i);
 	}
 }
 
@@ -903,18 +901,18 @@ extern void filter_by_node_mcs(job_record_t *job_ptr, int mcs_select,
 			/* if there is a mcs_label -> OK if it's the same */
 			if ((node_ptr->mcs_label != NULL) &&
 			     xstrcmp(node_ptr->mcs_label,job_ptr->mcs_label)) {
-				bit_clear(usable_node_mask, node_ptr->index);
+				bit_clear(usable_node_mask, i);
 			}
 			/* if no mcs_label -> OK if no jobs running */
 			if ((node_ptr->mcs_label == NULL) &&
 			    (node_ptr->run_job_cnt != 0)) {
-				bit_clear(usable_node_mask, node_ptr->index);
+				bit_clear(usable_node_mask, i);
 			}
 		}
 	} else {
 		for (i = 0; (node_ptr = next_node(&i)); i++) {
 			 if (node_ptr->mcs_label != NULL) {
-				bit_clear(usable_node_mask, node_ptr->index);
+				bit_clear(usable_node_mask, i);
 			}
 		}
 	}
@@ -4349,12 +4347,10 @@ extern void re_kill_job(job_record_t *job_ptr)
 		if (IS_NODE_DOWN(front_end_ptr)) {
 			for (i = 0; (node_ptr = next_node(&i)); i++) {
 				if ((job_ptr->node_bitmap_cg == NULL) ||
-				    (!bit_test(job_ptr->node_bitmap_cg,
-					       node_ptr->index)))
+				    (!bit_test(job_ptr->node_bitmap_cg, i)))
 					continue;
-				bit_clear(job_ptr->node_bitmap_cg,
-					  node_ptr->index);
-				job_update_tres_cnt(job_ptr, node_ptr->index);
+				bit_clear(job_ptr->node_bitmap_cg, i);
+				job_update_tres_cnt(job_ptr, i);
 				if (node_ptr->comp_job_cnt)
 					(node_ptr->comp_job_cnt)--;
 				if ((job_ptr->node_cnt > 0) &&
@@ -4376,12 +4372,12 @@ extern void re_kill_job(job_record_t *job_ptr)
 #else
 	for (i = 0; (node_ptr = next_node(&i)); i++) {
 		if ((job_ptr->node_bitmap_cg == NULL) ||
-		    (bit_test(job_ptr->node_bitmap_cg, node_ptr->index) == 0)) {
+		    (bit_test(job_ptr->node_bitmap_cg, i) == 0)) {
 			continue;
 		} else if (IS_NODE_DOWN(node_ptr)) {
 			/* Consider job already completed */
-			bit_clear(job_ptr->node_bitmap_cg, node_ptr->index);
-			job_update_tres_cnt(job_ptr, node_ptr->index);
+			bit_clear(job_ptr->node_bitmap_cg, i);
+			job_update_tres_cnt(job_ptr, i);
 			if (node_ptr->comp_job_cnt)
 				(node_ptr->comp_job_cnt)--;
 			if ((job_ptr->node_cnt > 0) &&

@@ -14942,7 +14942,7 @@ static void _send_job_kill(job_record_t *job_ptr)
 		build_cg_bitmap(job_ptr);
 	agent_args->protocol_version = SLURM_PROTOCOL_VERSION;
 	for (i = 0; (node_ptr = next_node(&i)); i++) {
-		if (!bit_test(job_ptr->node_bitmap_cg, node_ptr->index))
+		if (!bit_test(job_ptr->node_bitmap_cg, i))
 			continue;
 		if (agent_args->protocol_version > node_ptr->protocol_version)
 			agent_args->protocol_version =

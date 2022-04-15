@@ -1919,8 +1919,8 @@ static void _queue_reboot_msg(void)
 		node_ptr->node_state &= ~NODE_STATE_REBOOT_REQUESTED;
 		node_ptr->node_state |= NODE_STATE_REBOOT_ISSUED;
 
-		bit_clear(avail_node_bitmap, node_ptr->index);
-		bit_clear(idle_node_bitmap, node_ptr->index);
+		bit_clear(avail_node_bitmap, i);
+		bit_clear(idle_node_bitmap, i);
 
 		node_ptr->boot_req_time = now;
 
