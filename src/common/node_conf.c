@@ -1378,5 +1378,5 @@ extern node_record_t * next_node(int *index)
 			return NULL;
 	}
 
-	return node_record_table_ptr[(*index)];
+	return node_record_table_ptr[*index];
 }
