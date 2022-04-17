@@ -2913,10 +2913,10 @@ static void _dump_node_cr(struct cr_record *cr_ptr)
 	for (i = 0; (node_ptr = next_node(&i)); i++) {
 		info("Node:%s exclusive_cnt:%u alloc_mem:%"PRIu64"",
 		     node_ptr->name,
-		     cr_ptr->nodes[i].exclusive_cnt,
-		     cr_ptr->nodes[i].alloc_memory);
+		     cr_ptr->nodes[node_ptr->index].exclusive_cnt,
+		     cr_ptr->nodes[node_ptr->index].alloc_memory);
 
-		part_cr_ptr = cr_ptr->nodes[i].parts;
+		part_cr_ptr = cr_ptr->nodes[node_ptr->index].parts;
 		while (part_cr_ptr) {
 			info("  Part:%s run:%u tot:%u",
 			     part_cr_ptr->part_ptr->name,
@@ -2925,8 +2925,8 @@ static void _dump_node_cr(struct cr_record *cr_ptr)
 			part_cr_ptr = part_cr_ptr->next;
 		}
 
-		if (cr_ptr->nodes[i].gres_list)
-			gres_list = cr_ptr->nodes[i].gres_list;
+		if (cr_ptr->nodes[node_ptr->index].gres_list)
+			gres_list = cr_ptr->nodes[node_ptr->index].gres_list;
 		else
 			gres_list = node_ptr->gres_list;
 		if (gres_list)
@@ -2959,12 +2959,12 @@ static struct cr_record *_dup_cr(struct cr_record *cr_ptr)
 	new_cr_ptr->nodes = xcalloc(select_node_cnt,
 				    sizeof(struct node_cr_record));
 	for (i = 0; (node_ptr = next_node(&i)); i++) {
-		new_cr_ptr->nodes[i].alloc_memory =
-			cr_ptr->nodes[i].alloc_memory;
-		new_cr_ptr->nodes[i].exclusive_cnt =
-			cr_ptr->nodes[i].exclusive_cnt;
+		new_cr_ptr->nodes[node_ptr->index].alloc_memory =
+			cr_ptr->nodes[node_ptr->index].alloc_memory;
+		new_cr_ptr->nodes[node_ptr->index].exclusive_cnt =
+			cr_ptr->nodes[node_ptr->index].exclusive_cnt;
 
-		part_cr_ptr = cr_ptr->nodes[i].parts;
+		part_cr_ptr = cr_ptr->nodes[node_ptr->index].parts;
 		while (part_cr_ptr) {
 			new_part_cr_ptr =
 				xmalloc(sizeof(struct part_cr_record));
@@ -2972,17 +2972,17 @@ static struct cr_record *_dup_cr(struct cr_record *cr_ptr)
 			new_part_cr_ptr->run_job_cnt = part_cr_ptr->run_job_cnt;
 			new_part_cr_ptr->tot_job_cnt = part_cr_ptr->tot_job_cnt;
 			new_part_cr_ptr->next =
-				new_cr_ptr->nodes[i]. parts;
-			new_cr_ptr->nodes[i].parts =
+				new_cr_ptr->nodes[node_ptr->index]. parts;
+			new_cr_ptr->nodes[node_ptr->index].parts =
 				new_part_cr_ptr;
 			part_cr_ptr = part_cr_ptr->next;
 		}
 
-		if (cr_ptr->nodes[i].gres_list)
-			gres_list = cr_ptr->nodes[i].gres_list;
+		if (cr_ptr->nodes[node_ptr->index].gres_list)
+			gres_list = cr_ptr->nodes[node_ptr->index].gres_list;
 		else
 			gres_list = node_ptr->gres_list;
-		new_cr_ptr->nodes[i].gres_list =
+		new_cr_ptr->nodes[node_ptr->index].gres_list =
 			gres_node_state_list_dup(gres_list);
 	}
 	return new_cr_ptr;
@@ -3968,7 +3968,8 @@ extern int select_p_select_nodeinfo_set_all(void)
 			nodeinfo->tres_alloc_weighted = 0.0;
 		}
 		if (cr_ptr && cr_ptr->nodes) {
-			nodeinfo->alloc_memory = cr_ptr->nodes[n].alloc_memory;
+			nodeinfo->alloc_memory =
+				cr_ptr->nodes[node_ptr->index].alloc_memory;
 		} else {
 			nodeinfo->alloc_memory = 0;
 		}

@@ -1223,7 +1223,7 @@ static void _trigger_node_event(trig_mgr_info_t *trig_in, time_t now)
 			if (!IS_NODE_IDLE(node_ptr) ||
 			    (node_ptr->last_busy > min_idle))
 				continue;
-			bit_set(trigger_idle_node_bitmap, i);
+			bit_set(trigger_idle_node_bitmap, node_ptr->index);
 		}
 		if (trig_in->nodes_bitmap == NULL) {    /* all nodes */
 			xfree(trig_in->res_id);

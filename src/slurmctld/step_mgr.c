@@ -1810,23 +1810,24 @@ static int _count_cpus(job_record_t *job_ptr, bitstr_t *bitmap,
 	    job_ptr->job_resrcs->node_bitmap) {
 		int node_inx = -1;
 		for (i = 0; (node_ptr = next_node(&i)); i++) {
-			if (!bit_test(job_ptr->job_resrcs->node_bitmap, i))
+			if (!bit_test(job_ptr->job_resrcs->node_bitmap,
+				      node_ptr->index))
 				continue;
 			node_inx++;
-			if (!bit_test(job_ptr->node_bitmap, i) ||
-			    !bit_test(bitmap, i)) {
+			if (!bit_test(job_ptr->node_bitmap, node_ptr->index) ||
+			    !bit_test(bitmap, node_ptr->index)) {
 				/* absent from current job or step bitmap */
 				continue;
 			}
 			if (usable_cpu_cnt)
-				sum += usable_cpu_cnt[i];
+				sum += usable_cpu_cnt[node_ptr->index];
 			else
 				sum += job_ptr->job_resrcs->cpus[node_inx];
 		}
 	} else {
 		error("%pJ lacks cpus array", job_ptr);
 		for (i = 0; (node_ptr = next_node(&i)); i++) {
-			if (!bit_test(bitmap, i))
+			if (!bit_test(bitmap, node_ptr->index))
 				continue;
 			sum += node_ptr->config_ptr->cpus;
 		}

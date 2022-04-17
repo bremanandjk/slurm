@@ -3915,9 +3915,10 @@ void msg_to_slurmd (slurm_msg_type_t msg_type)
 		     IS_NODE_POWERING_DOWN(node_ptr)))
 			continue;
 		if (kill_agent_args->protocol_version >
-		    node_record_table_ptr[i]->protocol_version)
+		    node_record_table_ptr[node_ptr->index]->protocol_version)
 			kill_agent_args->protocol_version =
-				node_record_table_ptr[i]->protocol_version;
+				node_record_table_ptr[node_ptr->index]->
+				protocol_version;
 		hostlist_push_host(kill_agent_args->hostlist, node_ptr->name);
 		kill_agent_args->node_count++;
 	}
@@ -4501,7 +4502,7 @@ extern void check_reboot_nodes()
 			node_ptr->boot_req_time = 0;
 			set_node_down_ptr(node_ptr, NULL);
 
-			bit_clear(rs_node_bitmap, i);
+			bit_clear(rs_node_bitmap, node_ptr->index);
 		}
 	}
 }

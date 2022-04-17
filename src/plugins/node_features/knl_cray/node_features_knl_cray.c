@@ -1575,7 +1575,8 @@ static void _update_all_node_features(
 	 * contain KNL features
 	 */
 	for (i = 0; (node_ptr = next_node(&i)); i++) {
-		if (knl_node_bitmap && bit_test(knl_node_bitmap, i)) {
+		if (knl_node_bitmap && bit_test(knl_node_bitmap,
+						node_ptr->index)) {
 			if (validate_mode)
 				_validate_node_features(node_ptr);
 			continue;
@@ -2115,7 +2116,7 @@ static void _check_node_status(void)
 		node_ptr->reason_time = time(NULL);
 		node_ptr->reason_uid = slurm_conf.slurm_user_id;
 		if (avail_node_bitmap)
-			bit_clear(avail_node_bitmap, i);
+			bit_clear(avail_node_bitmap, node_ptr->index);
 	}
 	FREE_NULL_BITMAP(capmc_node_bitmap);
 }

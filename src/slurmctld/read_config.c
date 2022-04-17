@@ -260,7 +260,7 @@ static void _sort_node_record_table_ptr(void)
 	node_record_t *node_ptr;
 	for (int i = 0; (node_ptr = next_node(&i)); i++) {
 		info("node_rank[%d:%d]: %s",
-		     i, node_ptr->node_rank, node_ptr->name);
+		     node_ptr->index, node_ptr->node_rank, node_ptr->name);
 	}
 }
 
@@ -393,7 +393,8 @@ static void _build_bitmaps_pre_select(void)
 
 	for (int i = 0; (node_ptr = next_node(&i)); i++) {
 		if (node_ptr->config_ptr)
-			bit_set(node_ptr->config_ptr->node_bitmap, i);
+			bit_set(node_ptr->config_ptr->node_bitmap,
+				node_ptr->index);
 	}
 
 	return;
@@ -502,11 +503,11 @@ static void _build_bitmaps(void)
 
 		if ((IS_NODE_IDLE(node_ptr) && (job_cnt == 0)) ||
 		    IS_NODE_DOWN(node_ptr))
-			bit_set(idle_node_bitmap, i);
+			bit_set(idle_node_bitmap, node_ptr->index);
 		if (IS_NODE_POWERING_UP(node_ptr))
-			bit_set(booting_node_bitmap, i);
+			bit_set(booting_node_bitmap, node_ptr->index);
 		if (IS_NODE_COMPLETING(node_ptr))
-			bit_set(cg_node_bitmap, i);
+			bit_set(cg_node_bitmap, node_ptr->index);
 		if (IS_NODE_IDLE(node_ptr) ||
 		    IS_NODE_ALLOCATED(node_ptr) ||
 		    ((IS_NODE_REBOOT_REQUESTED(node_ptr) ||
@@ -516,21 +517,21 @@ static void _build_bitmaps(void)
 			if ((drain_flag == 0) &&
 			    (!IS_NODE_NO_RESPOND(node_ptr)))
 				make_node_avail(node_ptr);
-			bit_set(up_node_bitmap, i);
+			bit_set(up_node_bitmap, node_ptr->index);
 		}
 		if (IS_NODE_POWERED_DOWN(node_ptr))
-			bit_set(power_node_bitmap, i);
+			bit_set(power_node_bitmap, node_ptr->index);
 		if (IS_NODE_POWERING_DOWN(node_ptr)) {
-			bit_set(power_node_bitmap, i);
-			bit_clear(avail_node_bitmap, i);
+			bit_set(power_node_bitmap, node_ptr->index);
+			bit_clear(avail_node_bitmap, node_ptr->index);
 		}
 		if (IS_NODE_FUTURE(node_ptr))
-			bit_set(future_node_bitmap, i);
+			bit_set(future_node_bitmap, node_ptr->index);
 
 		if ((IS_NODE_REBOOT_REQUESTED(node_ptr) ||
 		     IS_NODE_REBOOT_ISSUED(node_ptr)) &&
 		    ((node_ptr->next_state & NODE_STATE_FLAGS) & NODE_RESUME))
-			bit_set(rs_node_bitmap, i);
+			bit_set(rs_node_bitmap, node_ptr->index);
 	}
 }
 
@@ -1967,7 +1968,7 @@ extern void build_feature_list_ne(void)
 			token = strtok_r(tmp_str, ",", &last);
 			while (token) {
 				_add_config_feature_inx(active_feature_list,
-							token, i);
+							token, node_ptr->index);
 				token = strtok_r(NULL, ",", &last);
 			}
 			xfree(tmp_str);
@@ -1977,11 +1978,11 @@ extern void build_feature_list_ne(void)
 			token = strtok_r(tmp_str, ",", &last);
 			while (token) {
 				_add_config_feature_inx(avail_feature_list,
-							token, i);
+							token, node_ptr->index);
 				if (!node_ptr->features_act) {
 					_add_config_feature_inx(
 							active_feature_list,
-							token, i);
+							token, node_ptr->index);
 				}
 				token = strtok_r(NULL, ",", &last);
 			}
@@ -2886,9 +2887,9 @@ static int _sync_nodes_to_active_job(job_record_t *job_ptr)
 		job_ptr->node_cnt = bit_set_count(job_ptr->node_bitmap);
 	for (i = 0; (node_ptr = next_node(&i)); i++) {
 		if (job_ptr->node_bitmap_cg) { /* job completing */
-			if (!bit_test(job_ptr->node_bitmap_cg, i))
+			if (!bit_test(job_ptr->node_bitmap_cg, node_ptr->index))
 				continue;
-		} else if (!bit_test(job_ptr->node_bitmap, i))
+		} else if (!bit_test(job_ptr->node_bitmap, node_ptr->index))
 			continue;
 
 		if ((job_ptr->details &&
@@ -2959,7 +2960,7 @@ static void _sync_nodes_to_suspended_job(job_record_t *job_ptr)
 	node_record_t *node_ptr;
 
 	for (int i = 0; (node_ptr = next_node(&i)); i++) {
-		if (bit_test(job_ptr->node_bitmap, i) == 0)
+		if (bit_test(job_ptr->node_bitmap, node_ptr->index) == 0)
 			continue;
 
 		node_ptr->sus_job_cnt++;
