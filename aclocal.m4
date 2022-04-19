@@ -1,6 +1,6 @@
-# generated automatically by aclocal 1.16.4 -*- Autoconf -*-
+# generated automatically by aclocal 1.16.2 -*- Autoconf -*-
 
-# Copyright (C) 1996-2021 Free Software Foundation, Inc.
+# Copyright (C) 1996-2020 Free Software Foundation, Inc.
 
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -24,7 +24,7 @@ To do so, use the procedure documented by the package, typically 'autoreconf'.])
 # Owen Taylor     1997-2001
 
 # Increment this whenever this file is changed.
-#serial 4
+#serial 3
 
 dnl AM_PATH_GLIB_2_0([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
 dnl Test for GLIB, and define GLIB_CFLAGS and GLIB_LIBS, if gmodule, gobject,
@@ -112,11 +112,11 @@ AC_ARG_ENABLE(glibtest, [  --disable-glibtest      do not try to compile and run
       CFLAGS="$CFLAGS $GLIB_CFLAGS"
       LIBS="$GLIB_LIBS $LIBS"
 dnl
-dnl Now check if the installed GLib is sufficiently new. (Also sanity
+dnl Now check if the installed GLIB is sufficiently new. (Also sanity
 dnl checks the results of pkg-config to some extent)
 dnl
       rm -f conf.glibtest
-      AC_RUN_IFELSE([AC_LANG_SOURCE([[
+      AC_TRY_RUN([
 #include <glib.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -142,7 +142,7 @@ main (void)
              glib_major_version, glib_minor_version, glib_micro_version);
       printf ("*** was found! If pkg-config was correct, then it is best\n");
       printf ("*** to remove the old version of GLib. You may also be able to fix the error\n");
-      printf("*** by modifying your LD_LIBRARY_PATH environment variable, or by editing\n");
+      printf("*** by modifying your LD_LIBRARY_PATH enviroment variable, or by editing\n");
       printf("*** /etc/ld.so.conf. Make sure you have run ldconfig if that is\n");
       printf("*** required on your system.\n");
       printf("*** If pkg-config was wrong, set the environment variable PKG_CONFIG_PATH\n");
@@ -152,7 +152,7 @@ main (void)
 	   (glib_minor_version != GLIB_MINOR_VERSION) ||
            (glib_micro_version != GLIB_MICRO_VERSION))
     {
-      printf("*** GLib header files (version %d.%d.%d) do not match\n",
+      printf("*** GLIB header files (version %d.%d.%d) do not match\n",
 	     GLIB_MAJOR_VERSION, GLIB_MINOR_VERSION, GLIB_MICRO_VERSION);
       printf("*** library (version %d.%d.%d)\n",
 	     glib_major_version, glib_minor_version, glib_micro_version);
@@ -167,24 +167,24 @@ main (void)
        }
      else
       {
-        printf("\n*** An old version of GLib (%u.%u.%u) was found.\n",
+        printf("\n*** An old version of GLIB (%u.%u.%u) was found.\n",
                glib_major_version, glib_minor_version, glib_micro_version);
-        printf("*** You need a version of GLib newer than %u.%u.%u. The latest version of\n",
+        printf("*** You need a version of GLIB newer than %u.%u.%u. The latest version of\n",
 	       major, minor, micro);
-        printf("*** GLib is always available from ftp://ftp.gtk.org.\n");
+        printf("*** GLIB is always available from ftp://ftp.gtk.org.\n");
         printf("***\n");
         printf("*** If you have already installed a sufficiently new version, this error\n");
         printf("*** probably means that the wrong copy of the pkg-config shell script is\n");
         printf("*** being found. The easiest way to fix this is to remove the old version\n");
-        printf("*** of GLib, but you can also set the PKG_CONFIG environment to point to the\n");
+        printf("*** of GLIB, but you can also set the PKG_CONFIG environment to point to the\n");
         printf("*** correct copy of pkg-config. (In this case, you will have to\n");
-        printf("*** modify your LD_LIBRARY_PATH environment variable, or edit /etc/ld.so.conf\n");
+        printf("*** modify your LD_LIBRARY_PATH enviroment variable, or edit /etc/ld.so.conf\n");
         printf("*** so that the correct libraries are found at run-time))\n");
       }
     }
   return 1;
 }
-]])],[],[no_glib=yes],[echo $ac_n "cross compiling; assumed OK... $ac_c"])
+],, no_glib=yes,[echo $ac_n "cross compiling; assumed OK... $ac_c"])
        CFLAGS="$ac_save_CFLAGS"
        LIBS="$ac_save_LIBS"
      fi
@@ -201,18 +201,18 @@ main (void)
        if test -f conf.glibtest ; then
         :
        else
-          echo "*** Could not run GLib test program, checking why..."
+          echo "*** Could not run GLIB test program, checking why..."
           ac_save_CFLAGS="$CFLAGS"
           ac_save_LIBS="$LIBS"
           CFLAGS="$CFLAGS $GLIB_CFLAGS"
           LIBS="$LIBS $GLIB_LIBS"
-          AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+          AC_TRY_LINK([
 #include <glib.h>
 #include <stdio.h>
-]],      [[ return ((glib_major_version) || (glib_minor_version) || (glib_micro_version)); ]])],
+],      [ return ((glib_major_version) || (glib_minor_version) || (glib_micro_version)); ],
         [ echo "*** The test program compiled, but did not run. This usually means"
-          echo "*** that the run-time linker is not finding GLib or finding the wrong"
-          echo "*** version of GLib. If it is not finding GLib, you'll need to set your"
+          echo "*** that the run-time linker is not finding GLIB or finding the wrong"
+          echo "*** version of GLIB. If it is not finding GLIB, you'll need to set your"
           echo "*** LD_LIBRARY_PATH environment variable, or edit /etc/ld.so.conf to point"
           echo "*** to the installed location  Also, make sure you have run ldconfig if that"
           echo "*** is required on your system"
@@ -220,7 +220,7 @@ main (void)
           echo "*** If you have an old version installed, it is best to remove it, although"
           echo "*** you may also be able to get things to work by modifying LD_LIBRARY_PATH" ],
         [ echo "*** The test program failed to compile or link. See the file config.log for the"
-          echo "*** exact error that occurred. This usually means GLib is incorrectly installed."])
+          echo "*** exact error that occured. This usually means GLIB is incorrectly installed."])
           CFLAGS="$ac_save_CFLAGS"
           LIBS="$ac_save_LIBS"
        fi
@@ -702,7 +702,7 @@ AS_VAR_COPY([$1], [pkg_cv_][$1])
 AS_VAR_IF([$1], [""], [$5], [$4])dnl
 ])dnl PKG_CHECK_VAR
 
-# Copyright (C) 2002-2021 Free Software Foundation, Inc.
+# Copyright (C) 2002-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -717,7 +717,7 @@ AC_DEFUN([AM_AUTOMAKE_VERSION],
 [am__api_version='1.16'
 dnl Some users find AM_AUTOMAKE_VERSION and mistake it for a way to
 dnl require some minimum version.  Point them to the right macro.
-m4_if([$1], [1.16.4], [],
+m4_if([$1], [1.16.2], [],
       [AC_FATAL([Do not call $0, use AM_INIT_AUTOMAKE([$1]).])])dnl
 ])
 
@@ -733,14 +733,14 @@ m4_define([_AM_AUTOCONF_VERSION], [])
 # Call AM_AUTOMAKE_VERSION and AM_AUTOMAKE_VERSION so they can be traced.
 # This function is AC_REQUIREd by AM_INIT_AUTOMAKE.
 AC_DEFUN([AM_SET_CURRENT_AUTOMAKE_VERSION],
-[AM_AUTOMAKE_VERSION([1.16.4])dnl
+[AM_AUTOMAKE_VERSION([1.16.2])dnl
 m4_ifndef([AC_AUTOCONF_VERSION],
   [m4_copy([m4_PACKAGE_VERSION], [AC_AUTOCONF_VERSION])])dnl
 _AM_AUTOCONF_VERSION(m4_defn([AC_AUTOCONF_VERSION]))])
 
 # AM_AUX_DIR_EXPAND                                         -*- Autoconf -*-
 
-# Copyright (C) 2001-2021 Free Software Foundation, Inc.
+# Copyright (C) 2001-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -792,7 +792,7 @@ am_aux_dir=`cd "$ac_aux_dir" && pwd`
 
 # AM_CONDITIONAL                                            -*- Autoconf -*-
 
-# Copyright (C) 1997-2021 Free Software Foundation, Inc.
+# Copyright (C) 1997-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -823,7 +823,7 @@ AC_CONFIG_COMMANDS_PRE(
 Usually this means the macro was only invoked conditionally.]])
 fi])])
 
-# Copyright (C) 1999-2021 Free Software Foundation, Inc.
+# Copyright (C) 1999-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -1014,7 +1014,7 @@ _AM_SUBST_NOTMAKE([am__nodep])dnl
 
 # Generate code to set up dependency tracking.              -*- Autoconf -*-
 
-# Copyright (C) 1999-2021 Free Software Foundation, Inc.
+# Copyright (C) 1999-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -1082,7 +1082,7 @@ AC_DEFUN([AM_OUTPUT_DEPENDENCY_COMMANDS],
 
 # Do all the work for Automake.                             -*- Autoconf -*-
 
-# Copyright (C) 1996-2021 Free Software Foundation, Inc.
+# Copyright (C) 1996-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -1146,7 +1146,7 @@ m4_ifval([$3], [_AM_SET_OPTION([no-define])])dnl
 [_AM_SET_OPTIONS([$1])dnl
 dnl Diagnose old-style AC_INIT with new-style AM_AUTOMAKE_INIT.
 m4_if(
-  m4_ifset([AC_PACKAGE_NAME], [ok]):m4_ifset([AC_PACKAGE_VERSION], [ok]),
+  m4_ifdef([AC_PACKAGE_NAME], [ok]):m4_ifdef([AC_PACKAGE_VERSION], [ok]),
   [ok:ok],,
   [m4_fatal([AC_INIT should be called with package and version arguments])])dnl
  AC_SUBST([PACKAGE], ['AC_PACKAGE_TARNAME'])dnl
@@ -1198,20 +1198,6 @@ AC_PROVIDE_IFELSE([AC_PROG_OBJCXX],
 		  [m4_define([AC_PROG_OBJCXX],
 			     m4_defn([AC_PROG_OBJCXX])[_AM_DEPENDENCIES([OBJCXX])])])dnl
 ])
-# Variables for tags utilities; see am/tags.am
-if test -z "$CTAGS"; then
-  CTAGS=ctags
-fi
-AC_SUBST([CTAGS])
-if test -z "$ETAGS"; then
-  ETAGS=etags
-fi
-AC_SUBST([ETAGS])
-if test -z "$CSCOPE"; then
-  CSCOPE=cscope
-fi
-AC_SUBST([CSCOPE])
-
 AC_REQUIRE([AM_SILENT_RULES])dnl
 dnl The testsuite driver may need to know about EXEEXT, so add the
 dnl 'am__EXEEXT' conditional if _AM_COMPILER_EXEEXT was seen.  This
@@ -1293,7 +1279,7 @@ for _am_header in $config_headers :; do
 done
 echo "timestamp for $_am_arg" >`AS_DIRNAME(["$_am_arg"])`/stamp-h[]$_am_stamp_count])
 
-# Copyright (C) 2001-2021 Free Software Foundation, Inc.
+# Copyright (C) 2001-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -1314,7 +1300,7 @@ if test x"${install_sh+set}" != xset; then
 fi
 AC_SUBST([install_sh])])
 
-# Copyright (C) 2003-2021 Free Software Foundation, Inc.
+# Copyright (C) 2003-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -1336,7 +1322,7 @@ AC_SUBST([am__leading_dot])])
 # Add --enable-maintainer-mode option to configure.         -*- Autoconf -*-
 # From Jim Meyering
 
-# Copyright (C) 1996-2021 Free Software Foundation, Inc.
+# Copyright (C) 1996-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -1371,7 +1357,7 @@ AC_MSG_CHECKING([whether to enable maintainer-specific portions of Makefiles])
 
 # Check to see how 'make' treats includes.	            -*- Autoconf -*-
 
-# Copyright (C) 2001-2021 Free Software Foundation, Inc.
+# Copyright (C) 2001-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -1414,7 +1400,7 @@ AC_SUBST([am__quote])])
 
 # Fake the existence of programs that GNU maintainers use.  -*- Autoconf -*-
 
-# Copyright (C) 1997-2021 Free Software Foundation, Inc.
+# Copyright (C) 1997-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -1435,7 +1421,12 @@ AC_DEFUN([AM_MISSING_HAS_RUN],
 [AC_REQUIRE([AM_AUX_DIR_EXPAND])dnl
 AC_REQUIRE_AUX_FILE([missing])dnl
 if test x"${MISSING+set}" != xset; then
-  MISSING="\${SHELL} '$am_aux_dir/missing'"
+  case $am_aux_dir in
+  *\ * | *\	*)
+    MISSING="\${SHELL} \"$am_aux_dir/missing\"" ;;
+  *)
+    MISSING="\${SHELL} $am_aux_dir/missing" ;;
+  esac
 fi
 # Use eval to expand $SHELL
 if eval "$MISSING --is-lightweight"; then
@@ -1448,7 +1439,7 @@ fi
 
 # Helper functions for option handling.                     -*- Autoconf -*-
 
-# Copyright (C) 2001-2021 Free Software Foundation, Inc.
+# Copyright (C) 2001-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -1477,7 +1468,7 @@ AC_DEFUN([_AM_SET_OPTIONS],
 AC_DEFUN([_AM_IF_OPTION],
 [m4_ifset(_AM_MANGLE_OPTION([$1]), [$2], [$3])])
 
-# Copyright (C) 1999-2021 Free Software Foundation, Inc.
+# Copyright (C) 1999-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -1524,7 +1515,7 @@ AC_LANG_POP([C])])
 # For backward compatibility.
 AC_DEFUN_ONCE([AM_PROG_CC_C_O], [AC_REQUIRE([AC_PROG_CC])])
 
-# Copyright (C) 2001-2021 Free Software Foundation, Inc.
+# Copyright (C) 2001-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -1543,7 +1534,7 @@ AC_DEFUN([AM_RUN_LOG],
 
 # Check to make sure that the build environment is sane.    -*- Autoconf -*-
 
-# Copyright (C) 1996-2021 Free Software Foundation, Inc.
+# Copyright (C) 1996-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -1624,7 +1615,7 @@ AC_CONFIG_COMMANDS_PRE(
 rm -f conftest.file
 ])
 
-# Copyright (C) 2009-2021 Free Software Foundation, Inc.
+# Copyright (C) 2009-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -1684,7 +1675,7 @@ AC_SUBST([AM_BACKSLASH])dnl
 _AM_SUBST_NOTMAKE([AM_BACKSLASH])dnl
 ])
 
-# Copyright (C) 2001-2021 Free Software Foundation, Inc.
+# Copyright (C) 2001-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -1712,7 +1703,7 @@ fi
 INSTALL_STRIP_PROGRAM="\$(install_sh) -c -s"
 AC_SUBST([INSTALL_STRIP_PROGRAM])])
 
-# Copyright (C) 2006-2021 Free Software Foundation, Inc.
+# Copyright (C) 2006-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -1731,7 +1722,7 @@ AC_DEFUN([AM_SUBST_NOTMAKE], [_AM_SUBST_NOTMAKE($@)])
 
 # Check how to create a tarball.                            -*- Autoconf -*-
 
-# Copyright (C) 2004-2021 Free Software Foundation, Inc.
+# Copyright (C) 2004-2020 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
